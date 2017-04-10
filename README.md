@@ -13,12 +13,12 @@ Requirements:
 
 To fill the database with dummy data run "python setup_db.py". Then to start the API locally, run "python main.py" and open http://localhost:8088 from your browser. All major browsers should be supported.
 
-The API will give you access to the following GET endpoints:
-/at
-/at?name=sofia
-/at?name=sofia&latitude=42.7&longitude=23
-/where
-/where/sofia
-/where/sofia/42.7/23
+The API will give you access to the following GET endpoints:<br/>
+/at<br/>
+/at?name=sofia<br/>
+/at?name=sofia&latitude=42.7&longitude=23<br/>
+/where<br/>
+/where/sofia<br/>
+/where/sofia/42.7/23<br/>
 
 The service has a web interface, but was intended to be accessed from Arduino. Thus, for convenience some services deliver CSV, and not JSON. To see the web interface, visit http://whereami.unriddle.it.
