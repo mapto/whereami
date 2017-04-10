@@ -111,22 +111,22 @@ def delete_location(name=None):
 '''
 @route('/<filename:re:.*\.js>')
 def javascripts(filename):
-    return static_file(filename, root='static/js')
+    return static_file(filename, root=curdir + '/static/js')
 
 
 @get('/<filename:re:.*\.css>')
 def stylesheets(filename):
-    return static_file(filename, root='static/css')
+    return static_file(filename, root=curdir + '/static/css')
 
 
 @get('/<filename:re:.*\.(jpg|png|gif|ico)>')
 def images(filename):
-    return static_file(filename, root='static/img')
+    return static_file(filename, root=curdir + '/static/img')
 
 
 @get('/<filename:re:.*\.(eot|ttf|woff|svg)>')
 def fonts(filename):
-    return static_file(filename, root='static/fonts')
+    return static_file(filename, root=curdir + '/static/fonts')
 
 @route('/')
 def root():
