@@ -2,7 +2,7 @@
 
 In memory of Liana Lessa (1987-2017).
 
-This is a test service for her prototype for http://lialessa.com/GAZE-BEYOND
+This is a test service for her prototype for http://cargocollective.com/lialessa/GAZE-BEYOND
 
 Requirements:
 - SQLite (https://sqlite.org/)
