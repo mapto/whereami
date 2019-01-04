@@ -1,41 +1,22 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
+from datetime import datetime
+'''
 from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, Float, String, DateTime
-from datetime import datetime
-
-from settings import db_path
-
-date_format = "%d/%m/%Y"
-
 '''
-Declare Tables
-'''
-Base = declarative_base()
-engine = create_engine(db_path, echo=False)
+from settings import debug
+from settings import db_path, date_format
 
-class Locations(Base):
-    __tablename__ = 'Locations'
-
-    id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True)
-    latitude = Column(Float)
-    longitude = Column(Float)
-    lastseen = Column(DateTime, default=func.current_timestamp())
+from db import Base, engine, Session
+from db import Locations
 
 '''
 Create all our declared tables
 '''
 Base.metadata.create_all(engine)
-
-Session = sessionmaker(bind=engine)
-
-'''
-Prefill the DB
-'''
-
 
 '''
 Create session

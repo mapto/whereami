@@ -5,13 +5,12 @@ In memory of Liana Lessa (1987-2017).
 This is a test service for her prototype for http://cargocollective.com/lialessa/GAZE-BEYOND
 
 Requirements:
-- SQLite (https://sqlite.org/)
-- Python 2.7 (https://www.python.org/)
-- bottle (http://bottlepy.org/)
-- SQLAlchemy (http://www.sqlalchemy.org/)
-- python-ujson (https://pypi.python.org/pypi/ujson)
+- Python 3 (https://www.python.org)
+- bottle (http://bottlepy.org)
+- SQLAlchemy (http://www.sqlalchemy.org) using SQLite (https://sqlite.org)
+- GeoPy (https://github.com/geopy) using GeocodeFarm (https://geocode.farm)
 
-To fill the database with dummy data run "python setup_db.py". Then to start the API locally, run "python main.py" and open http://localhost:8088 from your browser. All major browsers should be supported.
+To fill the database with dummy data run "python setup_db.py". Then to start the API locally, run "python main.py" and open http://localhost:8000 from your browser. All major browsers are supported.
 
 The API will give you access to the following GET endpoints:<br/>
 /at<br/>

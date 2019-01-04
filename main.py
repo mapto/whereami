@@ -1,23 +1,21 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from datetime import datetime
+from urllib.parse import unquote
+
 from bottle import route, run, template, static_file, get
 from bottle import response, request, redirect, error, abort
-from urllib import unquote_plus as unquote
-from datetime import datetime
-from geopy.geocoders import Nominatim
-from geopy.geocoders import GoogleV3
 
-from settings import curdir, db_path, host, port
+# from geopy.geocoders import ArcGIS as Geocoder
+from geopy.geocoders import GeocodeFarm as Geocoder
+
+from settings import debug
+from settings import static_path, host, port
+
+from db import Base, engine, Session
 from db import Locations
 
-print ("Working in " + curdir)
-engine = create_engine(db_path, echo=False)
-
-Session = sessionmaker(bind=engine)
-
-locator = GoogleV3()
+locator = Geocoder()
 
 def loc2csv(loc):
     return "%s,%s"%(getattr(loc, "latitude"),getattr(loc, "longitude"))
@@ -111,29 +109,32 @@ def delete_location(name=None):
 '''
 @route('/<filename:re:.*\.js>')
 def javascripts(filename):
-    return static_file(filename, root=curdir + '/static/js')
+    return static_file(filename, root=static_path + '/js')
 
 
 @get('/<filename:re:.*\.css>')
 def stylesheets(filename):
-    return static_file(filename, root=curdir + '/static/css')
+    return static_file(filename, root=static_path + '/css')
 
 
 @get('/<filename:re:.*\.(jpg|png|gif|ico)>')
 def images(filename):
-    return static_file(filename, root=curdir + '/static/img')
+    return static_file(filename, root=static_path + '/img')
 
 
 @get('/<filename:re:.*\.(eot|ttf|woff|svg)>')
 def fonts(filename):
-    return static_file(filename, root=curdir + '/static/fonts')
+    return static_file(filename, root=static_path + '/fonts')
 
 @route('/')
 def root():
     """ The pages need to be served too, so I added this.
     """
-    return static_file('index.html', root=curdir + '/static')
+    return static_file('index.html', root=static_path)
 
-print("Starting in %s"%curdir)
-print("With database %s"%db_path)
-run(host=host, port=port)
+if __name__ == '__main__':
+    from settings import curdir, db_path
+    #print ("Working in " + curdir)
+    print("Starting in %s"%curdir)
+    print("With database %s"%db_path)
+    run(host=host, port=port, debug=debug)

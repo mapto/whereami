@@ -4,6 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, Float, String, DateTime, func
 
 from settings import db_path
+from settings import debug
 
 '''
 Declare Tables
@@ -18,6 +19,7 @@ class Locations(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
+    address = Column(String, default=None)
     latitude = Column(Float)
     longitude = Column(Float)
     lastseen = Column(DateTime, default=func.current_timestamp())
