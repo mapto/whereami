@@ -14,7 +14,7 @@ This is a test service for her prototype for http://cargocollective.com/lialessa
 - To test web services, run "python test.py".
 - To create a blank database run "python db.py".
 - To start the API locally, run "python main.py" and open http://localhost:8000 from your browser. All major browsers are supported.
-- Use 'pyinstaller main.spec' to build a standalone executable (requries [pyinstaller](https://www.pyinstaller.org/) ). This requires a database file.
+- Use 'pyinstaller main.spec' to build a standalone executable (requries [pyinstaller](https://www.pyinstaller.org/)). This [requires](https://github.com/mapto/whereami/blob/master/main.spec) a database file.
 
 ## API GET endpoints
 * **/at** - get all locations<br/>

@@ -1,13 +1,13 @@
 # -*- mode: python -*-
 
-from settings import db_path
+# If locations.db is missing, run 'python db.py' to create a dummy dataset.
 
 block_cipher = None
 
 a = Analysis(['main.py'],
              pathex=[],
              binaries=[],
-             datas=[(db_path,'.'), ('static/*','./static'), ('static/img/*','./static/img')],
+             datas=[('locations.db','.'), ('static/*','./static'), ('static/img/*','./static/img')],
              hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
