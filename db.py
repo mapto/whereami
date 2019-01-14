@@ -34,7 +34,7 @@ Session = sessionmaker(bind=engine)
 
 session = Session()
 
-def reset_db(backup=True):
+def reset_db(blank=False, backup=True):
 	timestamp = None
 	if backup and os.path.exists(db_path):
 		timestamp = datetime.now().strftime(dateformat_log)
@@ -45,15 +45,17 @@ def reset_db(backup=True):
 	print("Create new database: %s" % db_url)
 	Base.metadata.create_all(engine)
 
-	mecca = Locations(name="MECCA", latitude=21.389082, longitude=39.857912)
-	berlin = Locations(name="BERLIN", latitude=52.520007, longitude=13.404954)
-	london = Locations(name="LONDON", latitude=51.507351, longitude=-0.127758)
-	milano = Locations(name="MILANO", latitude=45.465422, longitude=9.185924)
-	sofia = Locations(name="SOFIA", latitude=42.697708, longitude=23.321868)
-	brasilia = Locations(name="BRASILIA", latitude=-14.235004, longitude=-51.92528)
+	print("Populate with dummy data: %s" % ('True' if not blank else 'False'))
+	if not blank:
+		mecca = Locations(name="MECCA", latitude=21.389082, longitude=39.857912)
+		berlin = Locations(name="BERLIN", latitude=52.520007, longitude=13.404954)
+		london = Locations(name="LONDON", latitude=51.507351, longitude=-0.127758)
+		milano = Locations(name="MILANO", latitude=45.465422, longitude=9.185924)
+		sofia = Locations(name="SOFIA", latitude=42.697708, longitude=23.321868)
+		brasilia = Locations(name="BRASILIA", latitude=-14.235004, longitude=-51.92528)
 
-	session.add_all([mecca, berlin, london, milano, sofia, brasilia])
-	session.commit()
+		session.add_all([mecca, berlin, london, milano, sofia, brasilia])
+		session.commit()
 
 	return timestamp
 
@@ -68,4 +70,4 @@ def restore_db(timestamp):
 		os.rename(path, db_path)
 
 if __name__ == '__main__':
-	reset_db()
+	reset_db(blank=True)

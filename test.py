@@ -76,7 +76,7 @@ def start_server():
 	return server
 
 if __name__ == '__main__':
-	timestamp = reset_db()
+	timestamp = reset_db(blank=False)
 
 	server = start_server()
 	sleep(timeout) # give server time to start
