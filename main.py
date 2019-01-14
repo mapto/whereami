@@ -1,35 +1,12 @@
 #!/usr/bin/env python3
 
-from datetime import datetime
-from urllib.parse import unquote
-
 from bottle import route, run, template, static_file, get
 from bottle import response, request, redirect, error, abort
-
-# from geopy.geocoders import ArcGIS as Geocoder
-from geopy.geocoders import GeocodeFarm as Geocoder
 
 from settings import debug
 from settings import static_path, host, port
 
-from db import Base, engine, Session
-from db import Locations
-
-locator = Geocoder()
-
-def loc2csv(loc):
-    return "%s,%s"%(getattr(loc, "latitude"),getattr(loc, "longitude"))
-
-def to_csv(model):
-    """ Returns a CSV representation of an SQLAlchemy-backed object.
-    """
-
-    if not model:
-        return ""
-    if isinstance(model, list):
-        return "\n".join([next.name + ", " + loc2csv(next) for next in model])
-    else:
-        return loc2csv(model)
+import service
 
 @error(405)
 def mistake405(code):
@@ -48,52 +25,26 @@ def query_location_get():
         longitude = request.query.get("longitude")
         if latitude is not None and type(latitude) is str and len(latitude) > 0 and \
            longitude is not None and type(longitude) is str and len(longitude) > 0:
-            return query_location(name, latitude, longitude)
+            return service.query_location(name, latitude, longitude)
         else:
-            return query_location(name)
+            return service.query_location(name)
     else:
-        return query_location()
+        return service.query_location()
 
 @route('/where/:name', method=['GET'])
 @route('/where/:name/', method=['GET'])
 def get_location(name = None, latitude = None, longitude = None):
     if name is not None and type(name) is str and len(name) > 0:
-        return query_location(name)
+        return service.query_location(name)
     else:
-        return query_location()
+        return service.query_location()
 
 @route('/where', method=['GET'])
 @route('/where/', method=['GET'])
 @route('/where/:name/:latitude/:longitude', method=['GET', 'POST']) # ?name=:name&latitude=:latitude&longitude=:longitude
 def query_location(name = None, latitude = None, longitude = None):
-    location = None
-    session = Session()
-    if name is not None and len(name) > 0:
-        name = unquote(name)
-        location = session.query(Locations).filter(Locations.name.like(name)).first()
-        if latitude is not None and len(latitude) > 0 and longitude is not None and len(longitude) > 0:
-            if location is None:
-                # print('create')
-                location = Locations(name=name, latitude=latitude, longitude=longitude)
-                session.add(location)
-                session.commit()
-            else:
-                # print('update')
-                location.latitude = latitude
-                location.longitude = longitude
-                location.lastseen = datetime.now()
-                session.commit()
-        else: # not on our database
-            if location is None:
-                # print('import')
-                rloc = locator.geocode(name)
-                location = Locations(name=name, latitude=rloc.latitude, longitude=rloc.longitude)
-                session.add(location)
-                session.commit()
-    else:
-        location = session.query(Locations).all()
+    service.query_location(name, latitude, longitude)
 
-    return to_csv(location)
 '''
 @route('/delete/:name')
 def delete_location(name=None):
@@ -128,13 +79,15 @@ def fonts(filename):
 
 @route('/')
 def root():
-    """ The pages need to be served too, so I added this.
-    """
     return static_file('index.html', root=static_path)
 
-if __name__ == '__main__':
-    from settings import curdir, db_path
+def start_server():
+    from settings import curdir, db_url
     #print ("Working in " + curdir)
     print("Starting in %s"%curdir)
-    print("With database %s"%db_path)
+    print("With database %s"%db_url)
     run(host=host, port=port, debug=debug)
+
+if __name__ == '__main__':
+    start_server()
+    
