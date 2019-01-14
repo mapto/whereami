@@ -27,6 +27,9 @@ def test_service(url, expected=None):
 		if response.text:
 			print(response.text)
 	else:
+		if not response.text == expected:
+			print(response.text)
+			print(expected)
 		assert(response.text == expected)
 	return response.text
 
@@ -78,8 +81,8 @@ if __name__ == '__main__':
 	server = start_server()
 	sleep(timeout) # give server time to start
 
-	expected = "Berlin, 52.520007,13.404954\nBrasilia, -14.235004,-51.92528\nLondon, 51.507351,-0.127758\nMecca, 21.389082,39.857912\nMilano, 45.465422,9.185924\nNew York, 40.712784,-74.005941\nSofia, 42.697708,23.321868"
-	test_service(root_url + "/at", expected)
+	expected = "Berlin, 52.520007,13.404954\nBrasilia, -14.235004,-51.92528\nLondon, 51.507351,-0.127758\nMecca, 21.389082,39.857912\nMilano, 45.465422,9.185924\nSofia, 42.697708,23.321868"
+	test_service(root_url + "/at", expected.upper())
 	expected = "42.697708,23.321868"
 	test_service(root_url + "/at?name=sofia", expected)
 	expected = "42.7,23.0"
@@ -88,8 +91,8 @@ if __name__ == '__main__':
 	test_service(root_url + "/where")
 	test_service(root_url + "/where/sofia", expected)
 	test_service(root_url + "/where/sofia/42.697708/23.321868")
-	expected = "Berlin, 52.520007,13.404954\nBrasilia, -14.235004,-51.92528\nLondon, 51.507351,-0.127758\nMecca, 21.389082,39.857912\nMilano, 45.465422,9.185924\nNew York, 40.712784,-74.005941\nSofia, 42.697708,23.321868"
-	test_service(root_url + "/at", expected)
+	expected = "Berlin, 52.520007,13.404954\nBrasilia, -14.235004,-51.92528\nLondon, 51.507351,-0.127758\nMecca, 21.389082,39.857912\nMilano, 45.465422,9.185924\nSofia, 42.697708,23.321868"
+	test_service(root_url + "/at", expected.upper())
 	print("Service tests passed!")
 
 	server.shutdown()

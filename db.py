@@ -45,15 +45,14 @@ def reset_db(backup=True):
 	print("Create new database: %s" % db_url)
 	Base.metadata.create_all(engine)
 
-	mecca = Locations(name="Mecca", latitude=21.389082, longitude=39.857912)
-	new_york = Locations(name="New York", latitude=40.712784, longitude=-74.005941)
-	berlin = Locations(name="Berlin", latitude=52.520007, longitude=13.404954)
-	london = Locations(name="London", latitude=51.507351, longitude=-0.127758)
-	milano = Locations(name="Milano", latitude=45.465422, longitude=9.185924)
-	sofia = Locations(name="Sofia", latitude=42.697708, longitude=23.321868)
-	brasilia = Locations(name="Brasilia", latitude=-14.235004, longitude=-51.92528)
+	mecca = Locations(name="MECCA", latitude=21.389082, longitude=39.857912)
+	berlin = Locations(name="BERLIN", latitude=52.520007, longitude=13.404954)
+	london = Locations(name="LONDON", latitude=51.507351, longitude=-0.127758)
+	milano = Locations(name="MILANO", latitude=45.465422, longitude=9.185924)
+	sofia = Locations(name="SOFIA", latitude=42.697708, longitude=23.321868)
+	brasilia = Locations(name="BRASILIA", latitude=-14.235004, longitude=-51.92528)
 
-	session.add_all([mecca, new_york, berlin, london, milano, sofia, brasilia])
+	session.add_all([mecca, berlin, london, milano, sofia, brasilia])
 	session.commit()
 
 	return timestamp
