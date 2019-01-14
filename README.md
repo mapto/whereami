@@ -4,16 +4,18 @@ In memory of Liana Lessa (1987-2017).
 
 This is a test service for her prototype for http://cargocollective.com/lialessa/GAZE-BEYOND
 
-Requirements:
+## Requirements
 - Python3 (https://www.python.org)
 - bottle (http://bottlepy.org)
 - SQLAlchemy (http://www.sqlalchemy.org) using SQLite (https://sqlite.org)
 - GeoPy (https://github.com/geopy) using GeocodeFarm (https://geocode.farm)
 
-To fill the database with dummy data run "python setup_db.py". Then to start the API locally, run "python main.py" and open http://localhost:8000 from your browser. All major browsers are supported.
+## Executables
+- To test web services, run "python test.py".
+- To fill the database with dummy data run "python db.py".
+- To start the API locally, run "python main.py" and open http://localhost:8000 from your browser. All major browsers are supported.
 
-The API will give you access to the following GET endpoints:<br/>
-
+## API GET endpoints
 * **/at** - get all locations<br/>
 * **/at?name=sofia** - get locations like name<br/>
 * **/at?name=sofia&latitude=42.7&longitude=23** - set location of name to the given coordinates<br/>
@@ -21,4 +23,6 @@ The API will give you access to the following GET endpoints:<br/>
 * **/where/sofia** - same as **/at?name=sofia**<br/>
 * **/where/sofia/42.7/23** - same as **/at?name=sofia&latitude=42.7&longitude=23**<br/>
 
-The service has a web interface, but was intended to be accessed from Arduino. Thus, it serves GET endpoints also for PUT operations. For the same reason it also delivers CSV, and not JSON. To see the web interface, visit http://whereami.unriddle.it.
+The service has a web interface, but was intended to be accessed from Arduino. Thus, it serves GET endpoints also for PUT operations. For the same reason it also delivers CSV, and not JSON.
+
+To see the web interface, visit http://whereami.unriddle.it.
