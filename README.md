@@ -8,7 +8,7 @@ This is a test service for her prototype for http://cargocollective.com/lialessa
 - Python3 (https://www.python.org)
 - bottle (http://bottlepy.org)
 - SQLAlchemy (http://www.sqlalchemy.org) using SQLite (https://sqlite.org)
-- GeoPy (https://github.com/geopy) using GeocodeFarm (https://geocode.farm)
+- GeoPy (https://github.com/geopy) using GeocodeFarm (https://geocode.farm), ArcGIS (https://www.arcgis.com) and Yandex (https://yandex.com/maps/)
 
 ## Executables
 - To test web services, run "python test.py".

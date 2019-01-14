@@ -83,10 +83,17 @@ def root():
     return static_file('index.html', root=static_path)
 
 def start_server():
+    import os
+
     from settings import curdir, db_url
-    #print ("Working in " + curdir)
+    
+    from db import reset_db
+
     print("Starting in %s"%curdir)
-    print("With database %s"%db_url)
+    if os.path.exists(db_url):
+        print("With database %s"%db_url)
+    else:
+        reset_db(blank=True)
     run(host=host, port=port, debug=debug)
 
 if __name__ == '__main__':

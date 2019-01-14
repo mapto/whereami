@@ -3,15 +3,12 @@
 from datetime import datetime
 from urllib.parse import unquote
 
-# from geopy.geocoders import ArcGIS as Geocoder
-from geopy.geocoders import GeocodeFarm as Geocoder
+import geolocator as locator
 
 from settings import debug
 
 from db import Base, engine, Session
 from db import Locations
-
-locator = Geocoder()
 
 def loc2csv(loc):
     return "%s,%s"%(getattr(loc, "latitude"),getattr(loc, "longitude"))
