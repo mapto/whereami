@@ -17,18 +17,31 @@ Declare Tables
 '''
 Base = declarative_base()
 
-engine = create_engine(db_url, echo=False)
+engine = create_engine(db_url, echo=debug)
+
+
+class Query(Base):
+	__tablename__ = 'query'
+
+	id = Column(Integer, primary_key=True)
+	hashcode = Column(String)
+	address = Column(String, default=None)
+	latitude = Column(Float)
+	longitude = Column(Float)
+	provider = Column(String, default=None)
+	date = Column(DateTime, default=func.current_timestamp())
 
 
 class Location(Base):
-    __tablename__ = 'location'
+	__tablename__ = 'location'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String, unique=True)
-    address = Column(String, default=None)
-    latitude = Column(Float)
-    longitude = Column(Float)
-    lastseen = Column(DateTime, default=func.current_timestamp())
+	id = Column(Integer, primary_key=True)
+	name = Column(String, unique=True)
+	address = Column(String, default=None)
+	latitude = Column(Float)
+	longitude = Column(Float)
+	lastseen = Column(DateTime, default=func.current_timestamp())
+
 
 Session = sessionmaker(bind=engine)
 
