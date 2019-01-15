@@ -8,7 +8,7 @@ import geolocator as locator
 from settings import debug
 
 from db import Base, engine, Session
-from db import Locations
+from db import Location
 
 def loc2csv(loc):
     return "%s,%s"%(getattr(loc, "latitude"),getattr(loc, "longitude"))
@@ -29,11 +29,11 @@ def query_location(name = None, latitude = None, longitude = None):
     session = Session()
     if name is not None and len(name) > 0:
         name = unquote(name)
-        location = session.query(Locations).filter(Locations.name.like(name)).first()
+        location = session.query(Location).filter(Location.name.like(name)).first()
         if latitude is not None and len(latitude) > 0 and longitude is not None and len(longitude) > 0:
             if location is None:
                 # print('create')
-                location = Locations(name=name.upper(), latitude=latitude, longitude=longitude)
+                location = Location(name=name.upper(), latitude=latitude, longitude=longitude)
                 session.add(location)
                 session.commit()
             else:
@@ -46,11 +46,11 @@ def query_location(name = None, latitude = None, longitude = None):
             if location is None:
                 # print('import')
                 rloc = locator.geocode(name)
-                location = Locations(name=name.upper(), latitude=rloc.latitude, longitude=rloc.longitude)
+                location = Location(name=name.upper(), latitude=rloc.latitude, longitude=rloc.longitude)
                 session.add(location)
                 session.commit()
     else:
-        location = session.query(Locations).order_by(Locations.name.asc()).all()
+        location = session.query(Location).order_by(Location.name.asc()).all()
 
     return to_csv(location)
 

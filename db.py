@@ -20,8 +20,8 @@ Base = declarative_base()
 engine = create_engine(db_url, echo=False)
 
 
-class Locations(Base):
-    __tablename__ = 'Locations'
+class Location(Base):
+    __tablename__ = 'location'
 
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
@@ -47,12 +47,12 @@ def reset_db(blank=False, backup=True):
 
 	print("Populate with dummy data: %s" % ('True' if not blank else 'False'))
 	if not blank:
-		mecca = Locations(name="MECCA", latitude=21.389082, longitude=39.857912)
-		berlin = Locations(name="BERLIN", latitude=52.520007, longitude=13.404954)
-		london = Locations(name="LONDON", latitude=51.507351, longitude=-0.127758)
-		milano = Locations(name="MILANO", latitude=45.465422, longitude=9.185924)
-		sofia = Locations(name="SOFIA", latitude=42.697708, longitude=23.321868)
-		brasilia = Locations(name="BRASILIA", latitude=-14.235004, longitude=-51.92528)
+		mecca = Location(name="MECCA", latitude=21.389082, longitude=39.857912)
+		berlin = Location(name="BERLIN", latitude=52.520007, longitude=13.404954)
+		london = Location(name="LONDON", latitude=51.507351, longitude=-0.127758)
+		milano = Location(name="MILANO", latitude=45.465422, longitude=9.185924)
+		sofia = Location(name="SOFIA", latitude=42.697708, longitude=23.321868)
+		brasilia = Location(name="BRASILIA", latitude=-14.235004, longitude=-51.92528)
 
 		session.add_all([mecca, berlin, london, milano, sofia, brasilia])
 		session.commit()
