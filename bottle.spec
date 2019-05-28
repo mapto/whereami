@@ -4,7 +4,7 @@
 
 block_cipher = None
 
-a = Analysis(['main.py'],
+a = Analysis(['app_bottle.py'],
              pathex=[],
              binaries=[],
              datas=[('locations.db','.'), ('static/*','./static'), ('static/img/*','./static/img')],
@@ -22,7 +22,7 @@ exe = EXE(pyz,
           a.scripts,
           [],
           exclude_binaries=True,
-          name='main',
+          name='app_bottle',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
@@ -34,4 +34,4 @@ coll = COLLECT(exe,
                a.datas,
                strip=False,
                upx=False,
-               name='main')
+               name='app_bottle')

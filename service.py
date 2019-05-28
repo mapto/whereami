@@ -5,7 +5,7 @@ from urllib.parse import unquote
 
 import geolocator as locator
 
-from settings import debug
+from config import debug
 
 from db import Session
 from db import Location
@@ -57,3 +57,4 @@ def query_location(name = None, latitude = None, longitude = None):
 
 if __name__ == '__main__':
     pass
+
