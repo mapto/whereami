@@ -8,8 +8,8 @@ host = 'localhost'
 port = 8000
 
 curdir = path.dirname(path.realpath(__file__)) # no trailing slash
-path.curdir = curdir 
-db_path = curdir + '/locations.db'
+path.curdir = curdir
+db_path = curdir + '/data/locations.db'
 db_url = 'sqlite:///' + db_path + '?check_same_thread=False'
 
 static_path = curdir + '/static'

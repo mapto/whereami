@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 from bottle import Bottle
-from bottle import static_file, request
+from bottle import static_file, request, abort
 
 from config import debug
 from config import static_path, host, port
@@ -18,11 +18,15 @@ def query_location_get():
         longitude = request.query.get("longitude")
         if latitude is not None and len(latitude) > 0 and \
            longitude is not None and len(longitude) > 0:
-            return service.query_location(name, latitude, longitude)
+            result = service.query_location(name, latitude, longitude)
         else:
-            return service.query_location(name)
+            result = service.query_location(name)
     else:
-        return service.query_location()
+        result = service.query_location()
+    if not result:
+        abort(404)
+    return result
+
 
 @app.get('/where')
 @app.get('/where/')
@@ -31,15 +35,18 @@ def query_location_get():
 @app.get('/where/:name/:latitude/:longitude') # ?name=:name&latitude=:latitude&longitude=:longitude
 @app.post('/where/:name/:latitude/:longitude') # ?name=:name&latitude=:latitude&longitude=:longitude
 @app.put('/where/:name/:latitude/:longitude') # ?name=:name&latitude=:latitude&longitude=:longitude
-def query_location(name = None, latitude = None, longitude = None):
+def query_location(name: str = None, latitude: float = None, longitude: float = None):
     if name is not None and type(name) is str and len(name) > 0:
         if latitude is not None and len(latitude) > 0 and \
            longitude is not None and len(longitude) > 0:
-            return service.query_location(name, latitude, longitude)
+            result = service.query_location(name, latitude, longitude)
         else:
-            return service.query_location(name)
+            result = service.query_location(name)
     else:
-        return service.query_location()
+        result = service.query_location()
+    if not result:
+        abort(404)
+    return result
 
 '''
 @route('/delete/:name')
@@ -80,16 +87,15 @@ def root():
 def start_server():
     import os
 
-    from config import curdir, db_url
+    from config import curdir, db_url, db_path
     
-    from db import reset_db
-
     print("Starting in %s"%curdir)
-    if os.path.exists(db_url):
+    if os.path.exists(db_path):
         print("With database %s"%db_url)
     else:
+        from db import reset_db
         reset_db(blank=True)
-    app.run(host=host, port=port, debug=debug)
+    app.run(host=host, port=port, debug=debug, reload=True)
 
 if __name__ == '__main__':
     start_server()

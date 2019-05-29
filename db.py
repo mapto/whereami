@@ -3,6 +3,7 @@
 
 import os
 from datetime import datetime
+import json
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -41,6 +42,12 @@ class Location(Base):
     latitude = Column(Float)
     longitude = Column(Float)
     lastseen = Column(DateTime, default=func.current_timestamp())
+
+    def __format__(self, format):
+        if format == 'csv':
+            return "%s, %s, %.2f, %.2f"%(self.name, self.latitude, self.longitude)
+        if format == 'json':
+            return json.dumps(self)
 
 
 Session = sessionmaker(bind=engine)
@@ -83,4 +90,4 @@ def restore_db(timestamp):
         os.rename(path, db_path)
 
 if __name__ == '__main__':
-    reset_db(blank=True)
+    reset_db()

@@ -1,14 +1,10 @@
 #!/usr/bin/env python3
 
 from datetime import datetime
-from urllib.parse import unquote
 
 import geolocator as locator
 
-from config import debug
-
-from db import Session
-from db import Location
+import persistence
 
 def loc2csv(loc):
     return "%.2f,%.2f"%(getattr(loc, "latitude"),getattr(loc, "longitude"))
@@ -24,37 +20,23 @@ def to_csv(model):
     else:
         return loc2csv(model)
 
-def query_location(name = None, latitude = None, longitude = None):
-    location = None
-    session = Session(expire_on_commit=False)
-    if name is not None and len(name) > 0:
-        name = unquote(name)
-        location = session.query(Location).filter(Location.name.like(name)).first()
-        if latitude is not None and len(latitude) > 0 and longitude is not None and len(longitude) > 0:
-            if location is None:
-                # print('create')
-                location = Location(name=name.upper(), latitude=latitude, longitude=longitude)
-                session.add(location)
-            else:
-                # print('update')
-                location.latitude = latitude
-                location.longitude = longitude
-                location.lastseen = datetime.now()
-            session.commit()
+def search_location(address: str):
+    location = persistence.get_location_by_address(address)
+    if not location:
+        # print('import')
+        rloc = locator.geocode(address)
+        if not rloc:
+            return None
+        location = persistence.upsert_location(address, rloc.latitude, rloc.longitude)
 
-        else: # not on our database
-            if location is None:
-                # print('import')
-                rloc = locator.geocode(name)
-                location = Location(name=name.upper(), latitude=rloc.latitude, longitude=rloc.longitude)
-                session.add(location)
-                session.commit()
+    return location
+
+def query_location(name: str = None, latitude: float = None, longitude: float = None):
+    if name:
+        if latitude and longitude:
+            location = persistence.upsert_location(name, latitude, longitude)
+        else:
+            location = search_location(name)
     else:
-        location = session.query(Location).order_by(Location.name.asc()).all()
-
-    session.close()
+        location = persistence.get_all_locations()
     return to_csv(location)
-
-if __name__ == '__main__':
-    pass
-

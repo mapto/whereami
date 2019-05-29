@@ -1,42 +1,11 @@
-import hashlib
-import re
-
 import numpy as np
+
+from persistence import cached_query
 
 # The geolocators in geopy that do not expect api_key
 from geopy.geocoders import GeocodeFarm, Yandex, ArcGIS
 
-from db import Session
-from db import Query
-
 locators = [GeocodeFarm(), Yandex(), ArcGIS()]
-
-def _query(session, hashcode, provider):
-    return session.query(Query).filter(Query.hashcode == hashcode, Query.provider == provider).first()
-
-def cached_query(address, provider):
-    address = re.sub(r'\s+', ' ', address.upper())
-    session = Session(expire_on_commit=False)
-    provider_name = provider.__class__.__name__
-    hashcode = hashlib.md5(bytes(address, encoding="utf-8")).hexdigest()
-    cached = _query(session, hashcode, provider_name)
-    if not cached:
-        try:
-            response = provider.geocode(address)
-        except Exception as e:
-            print(e)
-            response = None
-        if response:
-            cached = Query(hashcode=hashcode, address=address,\
-                latitude=response.latitude, longitude=response.longitude,\
-                provider=provider_name)
-            session.add(cached)
-            session.commit()
-
-    #session.expunge(cached)
-    #session.expunge_all()
-    session.close()
-    return cached
 
 class Coordinates:
     def __init__(self, latitude, longitude):
@@ -50,7 +19,9 @@ def reject_outliers(data, alpha = 90):
     mask = (data.lat < np.percentile(data.lat, alpha)) & (data.long < np.percentile(data.long, alpha))
     return data[mask]
 
-def geocode(address):
+def geocode(address, name=None):
+    if not name:
+        name = address
     #candidates = np.array([], dtype=[('long',float),('lat', float)])
     candidates = []
     for locator in locators:
