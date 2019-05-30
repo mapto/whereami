@@ -5,7 +5,7 @@ from datetime import datetime
 import logging
 log = logging.getLogger()
 
-from util import normalise
+from util import normalize
 
 from db import Session, Base, engine
 from db import Location, Query
@@ -31,7 +31,7 @@ def _get_all_locations(s: Session):
 
 
 def cached_query(address: str, provider: str = None):
-    address = normalise(address)
+    address = normalize(address)
     session = Session(expire_on_commit=False)
     provider_name = provider.__class__.__name__
     hashcode = hashlib.md5(bytes(address, encoding="utf-8")).hexdigest()
@@ -63,7 +63,7 @@ def get_all_locations():
     return locations
 
 def get_location_by_address(address: str):
-    address = normalise(address)
+    address = normalize(address)
     session = Session(expire_on_commit=False)
     locations = _get_one_location(session, address)
     session.close()
@@ -71,7 +71,7 @@ def get_location_by_address(address: str):
     return locations
 
 def upsert_location(address: str, latitude: float, longitude: float, name: str = None):
-    address = normalise(address)
+    address = normalize(address)
     if not name:
         name = address
     session = Session(expire_on_commit=False)
