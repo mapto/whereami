@@ -1,0 +1,16 @@
+.templates {
+	display: none;
+}
+.row {
+	margin: 0 0 1em 0;
+}
+.banner {
+	background-color: black;
+	color: white;
+	width: 100%;
+	padding: 2em;
+}
+.banner img {
+	width: 250px;
+	padding: 2em;
+}

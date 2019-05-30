@@ -2,18 +2,26 @@ import numpy as np
 
 from persistence import cached_query
 
+from db import geocoord_format
+
 # The geolocators in geopy that do not expect api_key
 from geopy.geocoders import GeocodeFarm, Yandex, ArcGIS
-
-locators = [GeocodeFarm(), Yandex(), ArcGIS()]
+# locators = [GeocodeFarm(), Yandex(), ArcGIS()]
+locators = [Yandex(), ArcGIS()]
 
 class Coordinates:
     def __init__(self, latitude, longitude):
         self.latitude=latitude
         self.longitude=longitude
-
+    """
     def __repr__(self):
         return "%s, %s" %(self.latitude, self.longitude)
+    """
+    def __format__(self, format):
+        if format == 'csv':
+            return geocoord_format.format(self.latitude, self.longitude)
+        if format == 'json':
+            return json.dumps(self)
 
 def reject_outliers(data, alpha = 90):
     mask = (data.lat < np.percentile(data.lat, alpha)) & (data.long < np.percentile(data.long, alpha))

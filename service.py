@@ -2,23 +2,14 @@
 
 from datetime import datetime
 
+import logging
+log = logging.getLogger()
+
 import geolocator as locator
 
 import persistence
 
-def loc2csv(loc):
-    return "%.2f,%.2f"%(getattr(loc, "latitude"),getattr(loc, "longitude"))
-
-def to_csv(model):
-    """ Returns a CSV representation of an SQLAlchemy-backed object.
-    """
-
-    if not model:
-        return ""
-    if isinstance(model, list):
-        return "\n".join([next.name + ", " + loc2csv(next) for next in model])
-    else:
-        return loc2csv(model)
+from db import geocoord_format
 
 def search_location(address: str):
     location = persistence.get_location_by_address(address)
@@ -31,12 +22,13 @@ def search_location(address: str):
 
     return location
 
-def query_location(name: str = None, latitude: float = None, longitude: float = None):
-    if name:
+def query_location(address: str = None, latitude: float = None, longitude: float = None):
+    if address:
         if latitude and longitude:
-            location = persistence.upsert_location(name, latitude, longitude)
+            location = persistence.upsert_location(address, latitude, longitude)
         else:
-            location = search_location(name)
+            location = search_location(address)
     else:
         location = persistence.get_all_locations()
-    return to_csv(location)
+
+    return location

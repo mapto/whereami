@@ -26,6 +26,6 @@ This is a test service for her prototype for http://cargocollective.com/lialessa
 * **/where/sofia** - same as **/at?name=sofia**<br/>
 * **/where/sofia/42.7/23** - same as **/at?name=sofia&latitude=42.7&longitude=23**<br/>
 
-The service has a web interface, but was intended to be accessed from Arduino. Thus, it serves GET endpoints also for PUT operations. For the same reason it also delivers CSV, and not JSON.
+The service has a web interface, but was intended to be accessed from Arduino. Thus, it serves GET endpoints also for PUT operations.
 
 To see the web interface, visit http://whereami.unriddle.it.

@@ -3,7 +3,11 @@
 from bottle import Bottle
 from bottle import static_file, request, abort
 
-from config import debug
+import json
+
+import logging
+log = logging.getLogger()
+
 from config import static_path, host, port
 
 import service
@@ -25,7 +29,7 @@ def query_location_get():
         result = service.query_location()
     if not result:
         abort(404)
-    return result
+    return json.dumps({"result": result}, default=lambda x: x.json())
 
 
 @app.get('/where')
@@ -46,7 +50,7 @@ def query_location(name: str = None, latitude: float = None, longitude: float = 
         result = service.query_location()
     if not result:
         abort(404)
-    return result
+    return json.dumps({"result": result}, default=lambda x: x.json())
 
 '''
 @route('/delete/:name')
@@ -61,22 +65,22 @@ def delete_location(name=None):
 
     return "Nothing to delete"
 '''
-@app.get('/<filename:re:.*\.js>')
+@app.get('/js/<filename:re:.*\.js>')
 def javascripts(filename):
     return static_file(filename, root=static_path + '/js')
 
 
-@app.get('/<filename:re:.*\.css>')
+@app.get('/css/<filename:re:.*\.css>')
 def stylesheets(filename):
     return static_file(filename, root=static_path + '/css')
 
 
-@app.get('/<filename:re:.*\.(jpg|png|gif|ico)>')
+@app.get('/img/<filename:re:.*\.(jpg|png|gif|ico)>')
 def images(filename):
     return static_file(filename, root=static_path + '/img')
 
 
-@app.get('/<filename:re:.*\.(eot|ttf|woff|svg)>')
+@app.get('/font/<filename:re:.*\.(eot|ttf|woff|svg)>')
 def fonts(filename):
     return static_file(filename, root=static_path + '/fonts')
 
@@ -95,7 +99,7 @@ def start_server():
     else:
         from db import reset_db
         reset_db(blank=True)
-    app.run(host=host, port=port, debug=debug, reload=True)
+    app.run(host=host, port=port, debug=(log.getEffectiveLevel() <= logging.DEBUG), reload=True)
 
 if __name__ == '__main__':
     start_server()

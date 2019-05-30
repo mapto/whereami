@@ -3,6 +3,9 @@ from os import path
 date_format = "%d/%m/%Y"
 dateformat_log = "%Y%m%d%H%M%S"
 
+coord_format = "{:.2f}"
+geocoord_format = "{},{}".format(coord_format, coord_format)
+
 #host = '185.80.0.213'
 host = 'localhost'
 port = 8000
@@ -14,4 +17,7 @@ db_url = 'sqlite:///' + db_path + '?check_same_thread=False'
 
 static_path = curdir + '/static'
 
-debug = False
+import logging
+log = logging.getLogger()
+log.setLevel(logging.INFO)
+# log.setLevel(logging.DEBUG)

@@ -1,140 +1,19 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!doctype html>
+<html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Where Am I?</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.1.min.js"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
-	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
-	<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
-	<script type="text/javascript">
-var map;
-var home = [52.52, 13.40];
-
-function initMap() {
-    map = new L.Map("map", {
-        center: new L.LatLng(home[0], home[1]),
-        zoom: 6
-    });
-	
-    var origLayer = map.addLayer(new L.StamenTileLayer("toner", {
-        detectRetina: true
-    }));
-	
-}
-
-
-	</script>
-	<script type="text/javascript">
-
-function isIterable(obj) {
-  // checks for null and undefined
-  if (obj == null) {
-    return false;
-  }
-  return typeof obj[Symbol.iterator] === 'function';
-}
-
-function add_row(next) {
-	var val = next.split(",");
-	var result = $('#row-template').clone();
-	if (val.length == 3) {
-		$('.name', result).text(val[0]);
-		$('.lat', result).text(val[1]);
-		$('.long', result).text(val[2]);
-
-	    var marker = L.marker([val[1],val[2]]).addTo(map)
-	    	.bindPopup(val[0]);
-	} else {
-		$('.name', result).text($('#name').val());
-		$('.lat', result).text(val[0]);
-		$('.long', result).text(val[1]);
-
-	    var marker = L.marker([val[0],val[1]]).addTo(map)
-	    	.bindPopup($('#name').val());	
-
-	}
-	$('#table-body').append(result);
-}
-
-function read(data) {
-	$('#table-body').html('<tbody id="table-body"></tbody>');		    				
-	var locs = data.split("\n");
-	if (locs.length > 1) {
-		for (next of locs) {
-			add_row(next);
-		}		
-	} else {
-		add_row(data);
-		locs = locs[0].split(",");
-
-		$('#latitude').val(locs[0]);
-		$('#longitude').val(locs[1]);
-		
-		map.panTo(new L.LatLng(locs[0], locs[1]));	
-	}
-}
-
-function clear() {
-	map.panTo(new L.LatLng(home[0], home[1]));
-	return $.ajax({url:"/at", success: read, method: "GET"});
-}
-
-function init() {
-	initMap();
-
-	clear();
-
-	$('#name').on('click', clear);
-
-
-	// Do not submit form on enter
-	$('#name').on('keydown', function(e){
-		if (e.keyCode == 13) {
-			e.preventDefault();
-		}
-	});
-
-	$('#name').on('keyup', function(e){
-		if (e.keyCode == 13) {
-			e.preventDefault();
-			// console.log($('#name').val());
-			if ($('#name').val().length > 0) {
-				$.ajax({url:"/where/" + $('#name').val(), success: read, method: "GET"});
-			}
-		}
-	});
-
-}
-	</script>
-	<style type="text/css">
-.templates {
-	display: none;
-}
-.row {
-	margin: 0 0 1em 0;
-}
-.banner {
-	background-color: black;
-	color: white;
-	width: 100%;
-	padding: 2em;
-}
-.banner img {
-	width: 250px;
-	padding: 2em;
-}
-	</style>
+	<link rel="stylesheet" href="css/custom.css" />
 </head>
-<body onload="init()">
+<body>
     <div id="container" class="container">
     	<h1>Where am I?</h1>
     	<div class="row banner">
     		<div class="col-md-4" style="text-align:center">
-    			<img src="liana.jpg">
+    			<img src="img/liana.jpg">
     		</div>
     		<div class="col-md-8">
     			<p>This site is dedicated to Liana Lessa who left us on 27 February 2017.</p>
@@ -170,5 +49,11 @@ function init() {
 	<table class="templates"><tbody>
 		<tr id="row-template"><td class="name"></td><td class="lat"></td><td class="long"></td></tr>
 	</tbody></table>
+
+	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.1.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>
+	<script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.3.0"></script>
+	<script type="text/javascript" src="js/custom.js"></script>
 </body>
 </html>

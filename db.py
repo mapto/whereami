@@ -1,93 +1,62 @@
 #!/usr/bin/env python3
 """Run standalone to reset DB for test purposes. Timestamped backup of previous version will be created if it exists"""
 
-import os
-from datetime import datetime
-import json
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, Float, String, DateTime, func
 
-from config import db_path, db_url, dateformat_log
-from config import debug
+import logging
+log = logging.getLogger()
 
-'''
-Declare Tables
-'''
+from config import db_url, coord_format, geocoord_format
+
+
 Base = declarative_base()
 
-engine = create_engine(db_url, echo=debug)
+engine = create_engine(db_url, echo=(log.getEffectiveLevel() <= logging.DEBUG))
 
 
 class Query(Base):
+    """Queries are agnostic to names"""
     __tablename__ = 'query'
 
     id = Column(Integer, primary_key=True)
-    hashcode = Column(String)
-    address = Column(String, default=None)
-    latitude = Column(Float)
-    longitude = Column(Float)
+    hashcode = Column(String, nullable=False)
+    address = Column(String, nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
     provider = Column(String, default=None)
-    date = Column(DateTime, default=func.current_timestamp())
+    date = Column(DateTime, default=func.current_timestamp(), nullable=False)
 
 
 class Location(Base):
+    """When a name is missig, it should be made equal to the address"""
     __tablename__ = 'location'
 
     id = Column(Integer, primary_key=True)
     name = Column(String, unique=True)
-    address = Column(String, default=None)
-    latitude = Column(Float)
-    longitude = Column(Float)
-    lastseen = Column(DateTime, default=func.current_timestamp())
+    address = Column(String, default=None, nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
+    lastseen = Column(DateTime, default=func.current_timestamp(), nullable=False)
+
+    def json(self):
+        return {"name": self.name, "address": self.address, "latitude": coord_format.format(self.latitude), "longitude": coord_format.format(self.longitude)}
+
+    def __repr__(self):
+        return "{:json}".format(self)
 
     def __format__(self, format):
+        if format == 'coord':
+            return geocoord_format.format(self.latitude, self.longitude)
         if format == 'csv':
-            return "%s, %s, %.2f, %.2f"%(self.name, self.latitude, self.longitude)
+            return '{} ({:coord}): "{}"'.format(self.name, self, self.address)
         if format == 'json':
-            return json.dumps(self)
+            return str(self.__dict__)
 
 
 Session = sessionmaker(bind=engine)
 
-session = Session()
+# session = Session()
 
-def reset_db(blank=False, backup=True):
-    timestamp = None
-    if backup and os.path.exists(db_path):
-        timestamp = datetime.now().strftime(dateformat_log)
-        backup = "%s.%s.%s" % (db_path[:-3], timestamp, db_path[-2:])
-        print("Backup previous database at: %s" % backup)
-        os.rename(db_path, backup)
-
-    print("Create new database: %s" % db_url)
-    Base.metadata.create_all(engine)
-
-    print("Populate with dummy data: %s" % ('True' if not blank else 'False'))
-    if not blank:
-        mecca = Location(name="MECCA", latitude=21.389082, longitude=39.857912)
-        berlin = Location(name="BERLIN", latitude=52.520007, longitude=13.404954)
-        london = Location(name="LONDON", latitude=51.507351, longitude=-0.127758)
-        milano = Location(name="MILANO", latitude=45.465422, longitude=9.185924)
-        sofia = Location(name="SOFIA", latitude=42.697708, longitude=23.321868)
-        brasilia = Location(name="BRASILIA", latitude=-14.235004, longitude=-51.92528)
-
-        session.add_all([mecca, berlin, london, milano, sofia, brasilia])
-        session.commit()
-
-    return timestamp
-
-def restore_db(timestamp):
-    engine.dispose()
-
-    path = "%s.%s.%s" % (db_path[:-3], timestamp, db_path[-2:]) if timestamp else ""
-    if os.path.exists(path):
-        timestamp = datetime.now().strftime(dateformat_log)
-        os.remove(db_path)
-        print("Restoring previous database from: %s" % path)
-        os.rename(path, db_path)
-
-if __name__ == '__main__':
-    reset_db()
