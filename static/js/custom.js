@@ -7,21 +7,21 @@ function initMap() {
         zoom: 12
     });
 	
-    // var origLayer = map.addLayer(new L.StamenTileLayer("toner", {
-    //     detectRetina: true
-    // }));
-	var origLayer = map.addLayer(new L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-		maxZoom: 17,
-		attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
-	}));	
-}
-
-function isIterable(obj) {
-  // checks for null and undefined
-  if (obj == null) {
-    return false;
-  }
-  return typeof obj[Symbol.iterator] === 'function';
+    // var origLayer = map.addLayer(new L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/toner-lite/{z}/{x}/{y}{r}.{ext}', {
+	// 	attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+	// 	subdomains: 'abcd',
+	// 	minZoom: 0,
+	// 	maxZoom: 20,
+	// 	ext: 'png'
+	// }));
+	// var origLayer = map.addLayer(new L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+	// 	maxZoom: 17,
+	// 	attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+	// }));
+	var origLayer = map.addLayer(new L.tileLayer('https://{s}.tile.openstreetmap.se/hydda/full/{z}/{x}/{y}.png', {
+		maxZoom: 18,
+		attribution: 'Tiles courtesy of <a href="http://openstreetmap.se/" target="_blank">OpenStreetMap Sweden</a> &mdash; Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+	}));
 }
 
 function add_row(next) {
@@ -37,18 +37,15 @@ function add_row(next) {
 function read(data) {
 	$('#table-body').html('<tbody id="table-body"></tbody>');		    				
 	var locs = JSON.parse(data).result;
-	if (locs.length > 1) {
-		for (next of locs) {
-			add_row(next);
-		}		
-	} else {
-		add_row(locs);
-
-		$('#latitude').val(locs.latitude);
-		$('#longitude').val(locs.longitude);
+	if (locs.length == 1) {
+		$('#latitude').val(locs[0].latitude);
+		$('#longitude').val(locs[0].longitude);
 		
-		map.panTo(new L.LatLng(locs.latitude, locs.longitude));	
+		map.panTo(new L.LatLng(locs[0].latitude, locs[0].longitude));	
 	}
+	for (next of locs) {
+		add_row(next);
+	}		
 }
 
 function clear() {

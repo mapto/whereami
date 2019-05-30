@@ -2,6 +2,9 @@
 
 from datetime import datetime
 
+from typing import List
+from db import Location
+
 import logging
 log = logging.getLogger()
 
@@ -11,7 +14,7 @@ import persistence
 
 from db import geocoord_format
 
-def search_location(address: str):
+def search_location(address: str) -> Location:
     location = persistence.get_location_by_address(address)
     if not location:
         # print('import')
@@ -22,13 +25,13 @@ def search_location(address: str):
 
     return location
 
-def query_location(address: str = None, latitude: float = None, longitude: float = None):
+def query_location(address: str = None, latitude: float = None, longitude: float = None) -> List[Location]:
     if address:
         if latitude and longitude:
-            location = persistence.upsert_location(address, latitude, longitude)
+            locations = [persistence.upsert_location(address, latitude, longitude)]
         else:
-            location = search_location(address)
+            locations = [search_location(address)]
     else:
-        location = persistence.get_all_locations()
+        locations = persistence.get_all_locations()
 
-    return location
+    return locations
