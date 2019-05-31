@@ -4,10 +4,10 @@ from persistence import cached_query
 
 from db import geocoord_format
 
-# The geolocators in geopy that do not expect api_key
-from geopy.geocoders import GeocodeFarm, Yandex, ArcGIS
-# locators = [GeocodeFarm(), Yandex(), ArcGIS()]
-locators = [Yandex(), ArcGIS()]
+from secret import selected_locators
+
+import logging
+log = logging.getLogger()
 
 class Coordinates:
     def __init__(self, latitude, longitude):
@@ -27,12 +27,15 @@ def reject_outliers(data, alpha = 90):
     mask = (data.lat < np.percentile(data.lat, alpha)) & (data.long < np.percentile(data.long, alpha))
     return data[mask]
 
-def geocode(address, name=None):
+def geocode(address, name=None, locators=None):
     if not name:
         name = address
+    if not locators:
+        locators = selected_locators.values()    
     #candidates = np.array([], dtype=[('long',float),('lat', float)])
     candidates = []
     for locator in locators:
+        log.debug(locator.__class__.__name__)
         rloc = cached_query(address, locator)
         if rloc:
             #print(rloc.raw)
@@ -50,5 +53,8 @@ def geocode(address, name=None):
     return Coordinates(np.average(coords.lat), np.average(coords.long))
 
 if __name__ == '__main__':
-    result = geocode("VIA DELLA CASETTA MATTEI 205")
-    print(result)
+    # result = geocode(u"VIA DELLA CASETTA MATTEI 205", locators=allGeocoders())
+    # addr = "VIA DELLA CASETTA MATTEI 205"
+    addr = u"I-ва МБАЛ бул. П. Евтимий №37, СРЕДЕЦ, СОФИЯ"
+    result = geocode(addr)
+    log.info(geocoord_format.format(result.latitude, result.longitude))

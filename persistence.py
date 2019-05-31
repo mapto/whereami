@@ -1,11 +1,10 @@
-import hashlib
 import os
 from datetime import datetime
 
 import logging
 log = logging.getLogger()
 
-from util import normalize
+from util import normalize, hash
 
 from db import Session, Base, engine
 from db import Location, Query
@@ -30,19 +29,23 @@ def _get_all_locations(s: Session):
     return s.query(Location).order_by(Location.name.asc()).all()
 
 
-def cached_query(address: str, provider: str = None):
+def cached_query(address: str, provider):
+    """Pecondition: provider is one of geopy.geocoders"""
     address = normalize(address)
-    session = Session(expire_on_commit=False)
     provider_name = provider.__class__.__name__
-    hashcode = hashlib.md5(bytes(address, encoding="utf-8")).hexdigest()
+    hashcode = hash(address)
+
+    session = Session(expire_on_commit=False)
     cached = _get_one_query(session, hashcode, provider_name)
     if not cached:
         try:
+            log.debug("Querying %s\t%s"%(provider_name, address))
             response = provider.geocode(address)
         except Exception as e:
             print(e)
             response = None
         if response:
+            log.debug("Resulted %.2f %.2f"%(response.latitude, response.longitude))
             cached = Query(hashcode=hashcode, address=address,\
                 latitude=response.latitude, longitude=response.longitude,\
                 provider=provider_name)
@@ -126,5 +129,5 @@ def restore_db(timestamp):
         os.rename(path, db_path)
 
 if __name__ == '__main__':
-    reset_db()
+    reset_db(blank=True)
 
