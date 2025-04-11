@@ -10,14 +10,18 @@ This is a test service for her prototype for http://cargocollective.com/lialessa
 - Python3 (https://www.python.org)
 - bottle (http://bottlepy.org)
 - SQLAlchemy (http://www.sqlalchemy.org) using SQLite (https://sqlite.org)
-- GeoPy (https://github.com/geopy) using GeocodeFarm (https://geocode.farm) and ArcGIS (https://www.arcgis.com)
+- GeoPy (https://github.com/geopy) using ArcGIS (https://www.arcgis.com)
 - NumPy (https://numpy.org/)
+- jQuery (https://jquery.com/)
+- Bootstrap (https://getbootstrap.com/)
+- Leaflet (https://leafletjs.com/)
 
 ## Executables
 - To test web services, run "python test.py".
 - To create a blank database run "python db.py".
 - To start the API locally, run "python main.py" and open http://localhost:8000 from your browser. All major browsers are supported.
 - Use 'pyinstaller main.spec' to build a standalone executable (requries [pyinstaller](https://www.pyinstaller.org/)). This [requires](https://github.com/mapto/whereami/blob/master/main.spec) a database file.
+- Use 'docker compose up' to deploy a docker container (requries [docker compose](https://docs.docker.com/compose/)).
 
 ## API GET endpoints
 * **/at** - get all locations<br/>

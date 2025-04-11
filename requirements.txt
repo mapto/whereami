@@ -1,0 +1,4 @@
+bottle==0.13.2
+geopy==2.4.1
+numpy==2.2.4
+sqlalchemy==2.0.40

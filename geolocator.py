@@ -4,12 +4,12 @@ import re
 import numpy as np
 
 # The geolocators in geopy that do not expect api_key
-from geopy.geocoders import GeocodeFarm, Yandex, ArcGIS
+from geopy.geocoders import Bing, ArcGIS
 
 from db import Session
 from db import Query
 
-locators = [GeocodeFarm(), ArcGIS()]
+locators = [ArcGIS()]
 
 
 def _query(session, hashcode, provider):
