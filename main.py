@@ -9,7 +9,7 @@ from settings import static_path, host, port
 
 import service
 
-app = Bottle(__name__)
+app = Bottle()
 
 
 @app.error(405)
