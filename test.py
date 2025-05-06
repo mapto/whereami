@@ -41,7 +41,7 @@ import time
 
 class TestWSGIServer(WSGIRefServer):
     """A mimic of WSGIRefServer with changes allowing the server to be shutdown wih a dedicated call.
-    Taken from https://stackoverflow.com/a/19749945/1827854"""
+	Taken from https://stackoverflow.com/a/19749945/1827854"""
 
     def run(self, app):  # pragma: no cover
         from wsgiref.simple_server import WSGIRequestHandler, WSGIServer
