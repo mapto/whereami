@@ -115,7 +115,7 @@ def start_server():
         print("With database %s" % db_url)
     else:
         reset_db(blank=True)
-    app.run(host=host, port=port, debug=debug)
+    app.run(host=host, port=port, debug=debug, reload=True)
 
 
 if __name__ == "__main__":

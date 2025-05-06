@@ -16,13 +16,12 @@ def loc2csv(loc):
 
 
 def to_csv(model):
-    """ Returns a CSV representation of an SQLAlchemy-backed object.
-    """
+    """Returns a CSV representation of an SQLAlchemy-backed object."""
 
     if not model:
         return ""
     if isinstance(model, list):
-        return "\n".join([next.name + ", " + loc2csv(next) for next in model])
+        return "\n".join([next.name + ", " + loc2csv(next) for next in model if next.latitude and next.longitude])
     else:
         return loc2csv(model)
 
@@ -65,6 +64,9 @@ def query_location(name=None, latitude=None, longitude=None):
         location = session.query(Location).order_by(Location.name.asc()).all()
 
     session.close()
+    if not location:
+        return None
+    print(repr(location))
     return to_csv(location)
 
 
