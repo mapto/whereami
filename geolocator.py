@@ -9,7 +9,11 @@ from geopy.geocoders import *
 from db import Session
 from db import Query
 
-locators = [ArcGIS()]
+locators = [
+    ArcGIS(),
+    Nominatim(user_agent="github.com/mapto/whereami"),
+    Photon(),
+]
 
 
 def _query(session, hashcode, provider):
