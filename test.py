@@ -4,7 +4,6 @@
 It makes a copy of the database and wipes it.
 Also, server remains running at the end and user has to stop it."""
 
-import os
 import requests
 from threading import Thread
 from time import sleep
@@ -14,7 +13,6 @@ from bottle import WSGIRefServer, run
 from settings import host, port
 
 from db import reset_db, restore_db
-from main import start_server
 
 timeout = 3
 
@@ -33,10 +31,6 @@ def test_service(url, expected=None):
             print(expected)
         assert response.text == expected
     return response.text
-
-
-from threading import Thread
-import time
 
 
 class TestWSGIServer(WSGIRefServer):

@@ -7,21 +7,26 @@ On 21 January 2019 I have decided that the [Creative Commons Attribution 4.0 Int
 This is a test service for her prototype for http://cargocollective.com/lialessa/GAZE-BEYOND, probably the best use of geolocation I've encountered in my life. Please do check out the idea and - if inspired - do try to take it forward, with or without me.
 
 ## Requirements
-- Python3 (https://www.python.org)
-- bottle (http://bottlepy.org)
-- SQLAlchemy (http://www.sqlalchemy.org) using SQLite (https://sqlite.org)
-- GeoPy (https://github.com/geopy) using ArcGIS (https://www.arcgis.com)
-- NumPy (https://numpy.org/)
-- jQuery (https://jquery.com/)
-- Bootstrap (https://getbootstrap.com/)
-- Leaflet (https://leafletjs.com/)
+- [Python3](https://www.python.org)
+- [bottle](http://bottlepy.org)
+- [SQLAlchemy](http://www.sqlalchemy.org) using SQLite (https://sqlite.org)
+- [GeoPy](https://github.com/geopy) using [ArcGIS](https://www.arcgis.com), [Nominatim](https://nominatim.org/) and [Photon](https://github.com/komoot/photon)
+- [NumPy](https://numpy.org/)
+- [jQuery](https://jquery.com/)
+- [Bootstrap](https://getbootstrap.com/)
+- [Leaflet.js](https://leafletjs.com/)
 
-## Executables
-- To test web services, run "python test.py".
-- To create a blank database run "python db.py".
-- To start the API locally, run "python main.py" and open http://localhost:8000 from your browser. All major browsers are supported.
-- Use 'pyinstaller main.spec' to build a standalone executable (requries [pyinstaller](https://www.pyinstaller.org/)). This [requires](https://github.com/mapto/whereami/blob/master/main.spec) a database file.
-- Use 'docker compose up' to deploy a docker container (requries [docker compose](https://docs.docker.com/compose/)).
+## Running
+- To test web services, run `python test.py`. This will start a test server, so make sure the API is not running and your port 8000 is available.
+- To create a blank database run `python db.py`.
+- To start the API locally, run `python main.py` and open http://localhost:8000 from your browser. All major browsers are supported.
+
+### Binary
+- Use `pyinstaller main.spec` to build a standalone executable (requries [pyinstaller](https://www.pyinstaller.org/)). This [requires](https://github.com/mapto/whereami/blob/master/main.spec) a database file.
+
+### Compose
+- Use `docker compose up` to deploy a docker container (requries [docker compose](https://docs.docker.com/compose/)).
+- Then you can create a blank database with `docker exec -it whereami-app-1 python db.py`.
 
 ## API GET endpoints
 * **/at** - get all locations<br/>
@@ -32,5 +37,3 @@ This is a test service for her prototype for http://cargocollective.com/lialessa
 * **/where/sofia/42.7/23** - same as **/at?name=sofia&latitude=42.7&longitude=23**<br/>
 
 The service has a web interface, but was intended to be accessed from Arduino. Thus, it serves GET endpoints also for PUT operations. For the same reason it also delivers CSV, and not JSON.
-
-To see the web interface, visit http://whereami.unriddle.it.

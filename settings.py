@@ -3,7 +3,6 @@ from os import path
 date_format = "%d/%m/%Y"
 dateformat_log = "%Y%m%d%H%M%S"
 
-# host = '185.80.0.213'
 host = "0.0.0.0"
 port = 8000
 

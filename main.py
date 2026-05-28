@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 from bottle import Bottle
-from bottle import template, static_file
-from bottle import response, request, redirect, abort
+from bottle import static_file
+from bottle import request
 
 from settings import debug
 from settings import static_path, host, port
