@@ -1,4 +1,4 @@
 bottle==0.13.4
-geopy==2.4.1
+geopy==2.5.0
 numpy==2.4.6
 sqlalchemy==2.0.50
